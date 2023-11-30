@@ -12,8 +12,8 @@ Button *button_producer = (Button*)malloc(sizeof(Button));
 Button *button_consumer = (Button*)malloc(sizeof(Button));
 Button *button_bounce = (Button*)malloc(sizeof(Button));
 
-const int pinoLed = 13; //PINO DIGITAL UTILIZADO PELO LED
-const int pinoLDR = A0; //PINO ANALÓGICO UTILIZADO PELO LDR
+const int pinoLed = 13;
+const int pinoLDR = A0;
 
 static int produce_item(void){
   static int item = 1;
@@ -99,7 +99,7 @@ static PT_THREAD(producer(struct pt *pt)){
     
   PT_SEM_WAIT(pt, &full);
     if(changed(button_producer)){
-      if (button_producer->stable == LOW){  // Se o botão foi pressionado
+      if (button_producer->stable == LOW){
         add_to_buffer(produce_item());
       }
     }    
@@ -113,7 +113,7 @@ static PT_THREAD(consumer(struct pt *pt)){
 
   PT_SEM_WAIT(pt, &empty);
     if(changed(button_consumer)){
-      if (button_consumer->stable == LOW){  // Se o botão foi pressionado
+      if (button_consumer->stable == LOW){
         consume_item(get_from_buffer());   
       }
     }    
@@ -127,19 +127,20 @@ static PT_THREAD(bounce(struct pt *pt)){
 
   PT_SEM_WAIT(pt, &bounce_sem);
     changed(button_bounce);
-    if (button_bounce->stable == LOW) {  // Se o botão foi pressionado
+    if (button_bounce->stable == LOW) {
       button_bounce->pressed_time = (millis() - button_bounce->button_pressed_time);
       if ((button_bounce->pressed_time >= 1000) && (button_bounce->pressed_time < 3000)) {
-        digitalWrite(9, HIGH); //acende o led
+        digitalWrite(9, HIGH);
       }else if ((button_bounce->pressed_time >= 3000) && (button_bounce->pressed_time < 5000)) {
-        digitalWrite(10, HIGH); //acende o led
+        digitalWrite(10, HIGH);
       }else if ((button_bounce->pressed_time >= 5000)) {
-        digitalWrite(11, HIGH); //acende o led
+        digitalWrite(11, HIGH);
       }
     } else {
-      digitalWrite(9, LOW); //APAGA O LED
-      digitalWrite(10, LOW); //APAGA O LED
-      digitalWrite(11, LOW); //APAGA O LED
+      button_bounce->pressed_time = 0;
+      digitalWrite(9, LOW);
+      digitalWrite(10, LOW);
+      digitalWrite(11, LOW);
     }
   PT_SEM_SIGNAL(pt, &full);
  
@@ -151,12 +152,11 @@ static PT_THREAD(ldr(struct pt *pt)){
 
   PT_SEM_WAIT(pt, &ldr_sem);
 
-  Serial.println(analogRead(pinoLDR));
-  if(analogRead(pinoLDR) > 600){ //SE O VALOR LIDO FOR MAIOR QUE 600, FAZ
-    digitalWrite(pinoLed, HIGH); //ACENDE O LED
+  if(analogRead(pinoLDR) > 600){
+    digitalWrite(pinoLed, HIGH);
   }  
-  else{ //SENÃO, FAZ
-    digitalWrite(pinoLed, LOW); //APAGA O LED
+  else{
+    digitalWrite(pinoLed, LOW);
   } 
 
   PT_SEM_SIGNAL(pt, &full);
@@ -213,6 +213,14 @@ void loop(){
   PT_INIT(&driver_pt);
 
   PT_SCHEDULE(driver_thread(&driver_pt));
-
+  Serial.print("LDR:");
+  Serial.print(analogRead(pinoLDR));
+  Serial.print(" ");
+  Serial.print("Bounce:");
+  Serial.print(button_bounce->pressed_time);
+  Serial.print(" ");
+  Serial.print("itens no buffer:");
+  Serial.print(bufptr);
+  Serial.println();
 }
 
