@@ -1,13 +1,18 @@
-## O que foi imprementado?
-  Nesse projeto utilizei a biblioteca protothreads para rodar 3 protothreads em paralelo.
-  ### 1º- Produtor/Consumidor
-  Nessa protothread, foi aplica o problema do produtor/consumidor aonde um botão faz o papel do produtor e outro do consumidor, quando um deles tentar fazer uma
-  operação inválida(tentar consumir com o buffer vazio/testar produzir com o buffer cheio) o led vermelho é acionado indicando bloqueio.
+<img src="images/arduino.jpg">
+<img src="images/arduino2.jpg">
+<img src="images/arduino3.jpg">
+<img src="images/arduino4.jpg">
 
-  ### 2º- Duração do tempo pressionado
+## O que foi implementado?
+  Nesse projeto utilizei a biblioteca protothreads para rodar 3 protothreads em paralelo.
+  ### 1º- Produtor/Consumidor(leds verdes)
+  Nessa protothread, foi aplicado o problema do produtor/consumidor onde um botão faz o papel do produtor e outro do consumidor, quando um deles tenta fazer uma
+  operação inválida(tentar consumir com o buffer vazio/tentar produzir com o buffer cheio) o led vermelho é acionado indicando bloqueio.
+
+  ### 2º- Duração do tempo pressionado(leds amarelos)
   Nessa protothread foi aplicado um cronômetro para medir a duração do tempo em que o botão permanceu pressionado, com o passar do tempo ele começa a ligar os leds 1 a 1.
 
-  ### 3º- Sensor de luz
+  ### 3º- Sensor de luz(led vermelho)
   Nessa protothread foi aplicado um photoresistor que vai funcionar como um sensor de luz nesse projeto, quando ele recebe pouca luz ou nada o led liga e 
   quando volta a receber luz o led apaga.
 
